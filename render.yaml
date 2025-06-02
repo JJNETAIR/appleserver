@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: wifi-voucher-checker
+    env: python
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: python backend/app.py
+    envVars:
+      - key: DATABASE_URL
+        value: postgresql://wifi_voucher_db_user:G4FBJTX0joC4sr0JBsI5BcmRrKjlKRPk@dpg-d0sa3nruibrs7381sf4g-a/wifi_voucher_db
+      - key: ADMIN_PASSWORD
+        value: jj5136

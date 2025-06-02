@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; text-align: center; padding: 50px; background: #ffffff; }
+        table { margin: 20px auto; border-collapse: collapse; }
+        td, th { padding: 10px; border: 1px solid #ddd; }
+        input[type="text"], input[type="password"], select, input[type="file"] { padding: 8px; margin: 5px; }
+        input[type="submit"] { padding: 10px 15px; background: black; color: white; border: none; }
+    </style>
+</head>
+<body>
+    <h2>Admin Panel</h2>
+    {% if not authenticated %}
+        <form method="POST">
+            <input type="password" name="password" placeholder="Enter admin password" required>
+            <br>
+            <input type="submit" value="Login">
+        </form>
+    {% else %}
+        <form method="POST" action="/upload">
+            <input type="text" name="voucher" placeholder="Voucher code" required>
+            <select name="days">
+                <option value="15">15 Days</option>
+                <option value="30">30 Days</option>
+            </select>
+            <input type="password" name="password" placeholder="Admin password" required>
+            <input type="submit" value="Add Voucher">
+        </form>
+        <br>
+        <form method="POST" action="/upload_csv" enctype="multipart/form-data">
+            <input type="file" name="file" required>
+            <input type="password" name="password" placeholder="Admin password" required>
+            <input type="submit" value="Upload CSV">
+        </form>
+        <h3>Existing Vouchers</h3>
+        <table>
+            <tr><th>Code</th><th>Type</th><th>Created</th><th>Days Left</th></tr>
+            {% for v in vouchers %}
+            <tr>
+                <td>{{ v.code }}</td>
+                <td>{{ v.vtype }}</td>
+                <td>{{ v.created.strftime('%Y-%m-%d') }}</td>
+                <td>{{ v.days_left() }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+</body>
+</html>

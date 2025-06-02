@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Voucher Checker</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; text-align: center; padding: 50px; background: #f8f8f8; }
+        img { width: 80px; }
+        input[type="text"] { padding: 10px; width: 250px; margin: 20px 0; font-size: 16px; }
+        input[type="submit"] { padding: 10px 20px; font-size: 16px; background: black; color: white; border: none; }
+        .message { margin-top: 20px; font-size: 18px; color: #333; }
+    </style>
+</head>
+<body>
+    <img src="{{ url_for('static', filename='apple-logo.png') }}" alt="Logo">
+    <h2>Check Voucher Validity</h2>
+    <form method="POST">
+        <input type="text" name="voucher" placeholder="Enter voucher code" required>
+        <br>
+        <input type="submit" value="Check">
+    </form>
+    {% if message %}
+        <div class="message">{{ message }}</div>
+    {% endif %}
+</body>
+</html>
