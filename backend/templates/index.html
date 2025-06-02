@@ -3,98 +3,123 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Voucher Status</title>
+  <title>Apple WiFi</title>
   <style>
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      background-color: #f2f2f7;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
       margin: 0;
-    }
-    .container {
-      background: white;
-      border-radius: 20px;
-      padding: 30px 20px;
-      max-width: 350px;
-      width: 90%;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      padding: 0;
+      background-color: #f9f9f9;
       text-align: center;
+      color: #111;
     }
+
+    .container {
+      max-width: 400px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    }
+
     .logo {
       width: 50px;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
+
     h1 {
-      font-size: 24px;
-      margin-bottom: 20px;
+      font-size: 1.8rem;
+      margin: 5px 0;
     }
+
+    h2 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin: 10px 0 20px;
+    }
+
     input[type="text"] {
       width: 100%;
       padding: 12px;
       font-size: 16px;
+      margin-bottom: 10px;
       border: 1px solid #ccc;
       border-radius: 12px;
-      margin-bottom: 15px;
-      outline: none;
-      box-sizing: border-box;
     }
+
     button {
       width: 100%;
       padding: 12px;
       font-size: 16px;
+      background-color: #007aff;
+      color: white;
       border: none;
       border-radius: 12px;
-      background-color: #000;
-      color: white;
       cursor: pointer;
+      font-weight: 500;
     }
-    button:hover {
-      background-color: #333;
+
+    .result {
+      margin-top: 25px;
+      padding: 16px;
+      background-color: #f8f8f8;
+      border-radius: 16px;
+      text-align: left;
     }
-    .status {
-      margin-top: 20px;
+
+    .result p {
+      margin: 8px 0;
       font-size: 16px;
     }
-    .status strong {
-      display: block;
-      margin: 8px 0;
+
+    .valid {
+      color: green;
+      font-weight: bold;
+    }
+
+    .invalid {
+      color: red;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple Logo" class="logo"/>
-    <h1>Voucher Status</h1>
-    <form id="voucher-form">
-      <input type="text" id="voucher" name="voucher" placeholder="Enter your voucher code" required />
-      <button type="submit">Check</button>
-    </form>
-    <div class="status" id="status">
-      <!-- Results appear here -->
+    <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple Logo" />
+    <h1>Apple WiFi</h1>
+    <h2>Check Voucher Validity</h2>
+
+    <input type="text" id="voucherCode" placeholder="Voucher Code" />
+    <button onclick="checkVoucher()">Check</button>
+
+    <div class="result" id="result" style="display:none;">
+      <p><strong>Voucher Code:</strong> <span id="code"></span></p>
+      <p><strong>Status:</strong> <span id="status" class=""></span></p>
+      <p><strong>Valid Until:</strong> <span id="expiry"></span></p>
+      <p><strong>Days Remaining:</strong> <span id="remaining"></span></p>
     </div>
   </div>
 
   <script>
-    document.getElementById('voucher-form').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const code = document.getElementById('voucher').value;
-      const response = await fetch(`/api/check?voucher=${encodeURIComponent(code)}`);
-      const result = await response.json();
+    async function checkVoucher() {
+      const code = document.getElementById("voucherCode").value.trim();
+      if (!code) return alert("Please enter a voucher code");
 
-      const statusDiv = document.getElementById('status');
-      if (result.valid) {
-        statusDiv.innerHTML = `
-          <strong>Voucher Code:</strong> ${result.voucher}
-          <strong>Expiry Date:</strong> ${result.expiry_date}
-          <strong>Days Remaining:</strong> ${result.days_remaining}
-        `;
-      } else {
-        statusDiv.innerHTML = `<strong style="color: red;">Invalid or Expired Voucher</strong>`;
-      }
-    });
+      const response = await fetch(`/check?voucher=${code}`);
+      const data = await response.json();
+
+      document.getElementById("result").style.display = "block";
+      document.getElementById("code").innerText = code;
+
+      const statusEl = document.getElementById("status");
+      statusEl.innerText = data.valid ? "✓ Valid" : "✗ Invalid";
+      statusEl.className = data.valid ? "valid" : "invalid";
+
+      document.getElementById("expiry").innerText = data.expiry || "-";
+      document.getElementById("remaining").innerText = data.days_remaining !== undefined ? data.days_remaining : "-";
+    }
   </script>
 </body>
 </html>
