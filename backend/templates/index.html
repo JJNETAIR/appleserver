@@ -1,25 +1,75 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Voucher Checker</title>
-    <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; text-align: center; padding: 50px; background: #f8f8f8; }
-        img { width: 80px; }
-        input[type="text"] { padding: 10px; width: 250px; margin: 20px 0; font-size: 16px; }
-        input[type="submit"] { padding: 10px 20px; font-size: 16px; background: black; color: white; border: none; }
-        .message { margin-top: 20px; font-size: 18px; color: #333; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wi-Fi Voucher Checker</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      text-align: center;
+      padding: 20px;
+      background-color: #f8f8f8;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 25px 20px;
+      border-radius: 16px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+    }
+
+    .logo {
+      width: 48px;
+      margin-bottom: 15px;
+    }
+
+    h2 {
+      font-size: 1.6em;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    p {
+      font-size: 1em;
+      margin: 10px 0;
+      color: #444;
+      word-wrap: break-word;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 18px 15px;
+      }
+
+      .logo {
+        width: 40px;
+      }
+
+      h2 {
+        font-size: 1.4em;
+      }
+
+      p {
+        font-size: 0.95em;
+      }
+    }
+  </style>
 </head>
 <body>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple Logo" width="50" style="margin-bottom: 10px;">
-    <h2>Check Voucher Validity</h2>
-    <form method="POST">
-        <input type="text" name="voucher" placeholder="Enter voucher code" required>
-        <br>
-        <input type="submit" value="Check">
-    </form>
-    {% if message %}
-        <div class="message">{{ message }}</div>
-    {% endif %}
+  <div class="container">
+    <img
+      src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg"
+      alt="Apple Logo"
+      class="logo"
+    />
+    <h2>Voucher Status</h2>
+    <p><strong>Voucher Code:</strong> {{ code }}</p>
+    <p><strong>Expiry Date:</strong> {{ expiry_date }}</p>
+    <p><strong>Days Remaining:</strong> {{ days_remaining }}</p>
+  </div>
 </body>
 </html>
