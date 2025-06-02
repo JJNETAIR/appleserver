@@ -2,74 +2,99 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Wi-Fi Voucher Checker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Voucher Status</title>
   <style>
     body {
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      text-align: center;
-      padding: 20px;
-      background-color: #f8f8f8;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background-color: #f2f2f7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
       margin: 0;
     }
-
     .container {
-      max-width: 400px;
-      margin: 0 auto;
-      background: #ffffff;
-      padding: 25px 20px;
-      border-radius: 16px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+      background: white;
+      border-radius: 20px;
+      padding: 30px 20px;
+      max-width: 350px;
+      width: 90%;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      text-align: center;
     }
-
     .logo {
-      width: 48px;
+      width: 50px;
+      margin-bottom: 20px;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 12px;
       margin-bottom: 15px;
+      outline: none;
+      box-sizing: border-box;
     }
-
-    h2 {
-      font-size: 1.6em;
-      margin-bottom: 10px;
-      color: #333;
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 12px;
+      background-color: #000;
+      color: white;
+      cursor: pointer;
     }
-
-    p {
-      font-size: 1em;
-      margin: 10px 0;
-      color: #444;
-      word-wrap: break-word;
+    button:hover {
+      background-color: #333;
     }
-
-    @media (max-width: 480px) {
-      .container {
-        padding: 18px 15px;
-      }
-
-      .logo {
-        width: 40px;
-      }
-
-      h2 {
-        font-size: 1.4em;
-      }
-
-      p {
-        font-size: 0.95em;
-      }
+    .status {
+      margin-top: 20px;
+      font-size: 16px;
+    }
+    .status strong {
+      display: block;
+      margin: 8px 0;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <img
-      src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg"
-      alt="Apple Logo"
-      class="logo"
-    />
-    <h2>Voucher Status</h2>
-    <p><strong>Voucher Code:</strong> {{ code }}</p>
-    <p><strong>Expiry Date:</strong> {{ expiry_date }}</p>
-    <p><strong>Days Remaining:</strong> {{ days_remaining }}</p>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple Logo" class="logo"/>
+    <h1>Voucher Status</h1>
+    <form id="voucher-form">
+      <input type="text" id="voucher" name="voucher" placeholder="Enter your voucher code" required />
+      <button type="submit">Check</button>
+    </form>
+    <div class="status" id="status">
+      <!-- Results appear here -->
+    </div>
   </div>
+
+  <script>
+    document.getElementById('voucher-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const code = document.getElementById('voucher').value;
+      const response = await fetch(`/api/check?voucher=${encodeURIComponent(code)}`);
+      const result = await response.json();
+
+      const statusDiv = document.getElementById('status');
+      if (result.valid) {
+        statusDiv.innerHTML = `
+          <strong>Voucher Code:</strong> ${result.voucher}
+          <strong>Expiry Date:</strong> ${result.expiry_date}
+          <strong>Days Remaining:</strong> ${result.days_remaining}
+        `;
+      } else {
+        statusDiv.innerHTML = `<strong style="color: red;">Invalid or Expired Voucher</strong>`;
+      }
+    });
+  </script>
 </body>
 </html>
